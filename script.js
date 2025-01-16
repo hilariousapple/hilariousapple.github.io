@@ -1,12 +1,3 @@
-/**
- * Pose Detection Application
- * Using TensorFlow.js and Teachable Machine
- * Created: January 2024
- */
-
-// Model URL from Teachable Machine
-//**************************************************
-//* as before, paste your lnk below
 let URL = "https://teachablemachine.withgoogle.com/models/6KnLhIs_s/";
 
 
@@ -14,21 +5,16 @@ let URL = "https://teachablemachine.withgoogle.com/models/6KnLhIs_s/";
 
 let model, webcam, ctx, labelContainer, maxPredictions;
 
-// Dynamic pose tracking
 let poseStates = {};
 let explosionActive = false;
 let explosionSound = new Audio('explsn.mp3');
 
 function setModelURL(url) {
     URL = url;
-    // Reset states when URL changes
     poseStates = {};
     explosionActive = false;
 }
 
-/**
- * Initialize the application
- */
 async function init() {
     const modelURL = URL + "model.json";
     const metadataURL = URL + "metadata.json";
@@ -84,7 +70,6 @@ async function predict() {
                 prediction[i].className + ": " + prediction[i].probability.toFixed(2);
             labelContainer.childNodes[i].innerHTML = classPrediction;
 
-            // Check pose dynamically
             checkPose(prediction[i], video);
         }
 
@@ -98,7 +83,6 @@ function checkPose(prediction, video) {
     const time = video.currentTime;
     const prob = prediction.probability;
 
-    // Only respond to pose1 through pose5 labels
     const poseNumber = prediction.className.toLowerCase().replace(/[^0-9]/g, '');
     const isPoseLabel = prediction.className.toLowerCase().includes('pose') && poseNumber >= 1 && poseNumber <= 5;
 
@@ -127,11 +111,20 @@ function checkPose(prediction, video) {
                 }
                 break;
             case '3':
-                if (time >= 9.9 && time <= 11.1 && !poseState.triggered) {
-                    triggerExplosion(poseState);
+                if ((time >= 9.9 && time <= 10.5 && !poseState.firstWindowTriggered) ||
+                    (time >= 10.5 && time <= 11.1 && !poseState.secondWindowTriggered)) {
+                    if (time <= 10.5) {
+                        poseState.firstWindowTriggered = true;
+                    } else {
+                        poseState.secondWindowTriggered = true;
+                    }
+                    explosionActive = true;
+                    playExplosionSound();
+                    setTimeout(() => { explosionActive = false; }, 300);
+                }
                 break;
             case '4':
-                if (time >= 10.0 && time <= 13.5 && !poseState.triggered) {
+                if (time >= 11.2 && time <= 13.5 && !poseState.triggered) {
                     triggerExplosion(poseState);
                 }
                 break;
