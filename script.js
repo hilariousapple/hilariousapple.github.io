@@ -1,4 +1,3 @@
-
 /**
  * Pose Detection Application
  * Using TensorFlow.js and Teachable Machine
@@ -8,7 +7,7 @@
 // Model URL from Teachable Machine
 //**************************************************
 //* as before, paste your lnk below
-let URL = "paste your link here";
+let URL = "https://teachablemachine.withgoogle.com/models/6KnLhIs_s/";
 
 
 
@@ -98,13 +97,13 @@ async function predict() {
 function checkPose(prediction, video) {
     const time = video.currentTime;
     const prob = prediction.probability;
-    
+
     // Only respond to pose1 through pose5 labels
     const poseNumber = prediction.className.toLowerCase().replace(/[^0-9]/g, '');
     const isPoseLabel = prediction.className.toLowerCase().includes('pose') && poseNumber >= 1 && poseNumber <= 5;
-    
+
     if (!isPoseLabel) return;
-    
+
     if (!poseStates[`pose${poseNumber}`]) {
         poseStates[`pose${poseNumber}`] = {
             triggered: false,
@@ -115,38 +114,29 @@ function checkPose(prediction, video) {
 
     if (prob > 0.8 && !explosionActive) {
         const poseState = poseStates[`pose${poseNumber}`];
-        
+
         switch(poseNumber) {
             case '1':
-                if (time >= 0.9 && time <= 3.0 && !poseState.triggered) {
+                if (time >= 2.0 && time <= 4.5 && !poseState.triggered) {
                     triggerExplosion(poseState);
                 }
                 break;
             case '2':
-                if (time >= 5.5 && time <= 7.5 && !poseState.triggered) {
+                if (time >= 5.0 && time <= 7.0 && !poseState.triggered) {
                     triggerExplosion(poseState);
                 }
                 break;
             case '3':
-                if ((time >= 11.5 && time <= 13.0 && !poseState.firstWindowTriggered) ||
-                    (time >= 17.5 && time <= 19.5 && !poseState.secondWindowTriggered)) {
-                    if (time <= 13.0) {
-                        poseState.firstWindowTriggered = true;
-                    } else {
-                        poseState.secondWindowTriggered = true;
-                    }
-                    explosionActive = true;
-                    playExplosionSound();
-                    setTimeout(() => { explosionActive = false; }, 300);
-                }
+                if (time >= 9.9 && time <= 11.1 && !poseState.triggered) {
+                    triggerExplosion(poseState);
                 break;
             case '4':
-                if (time >= 15.5 && time <= 16.6 && !poseState.triggered) {
+                if (time >= 10.0 && time <= 13.5 && !poseState.triggered) {
                     triggerExplosion(poseState);
                 }
                 break;
             case '5':
-                if (time >= 19.5 && !poseState.triggered) {
+                if (time >= 15.0 && !poseState.triggered) {
                     triggerExplosion(poseState);
                 }
                 break;
@@ -231,7 +221,7 @@ async function playInstructionVideo() {
     if (model) {
         processFrame();
     } else {
-        console.log("Please start webcam first to load the model");
+        console.log("https://teachablemachine.withgoogle.com/models/6KnLhIs_s/");
     }
 }
 
