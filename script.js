@@ -1,4 +1,4 @@
-let URL = "https://teachablemachine.withgoogle.com/models/6KnLhIs_s/";
+let URL = "https://teachablemachine.withgoogle.com/models/mQlyUbhFo/";
 
 
 
@@ -214,7 +214,7 @@ async function playInstructionVideo() {
     if (model) {
         processFrame();
     } else {
-        console.log("https://teachablemachine.withgoogle.com/models/6KnLhIs_s/");
+        console.log("https://teachablemachine.withgoogle.com/models/mQlyUbhFo/");
     }
 }
 
